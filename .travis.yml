@@ -1,0 +1,22 @@
+sudo: required
+language: generic
+services:
+  - docker
+
+before_install:
+  - docker build -t vundb/sandbox-docker-react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true vundb/sandbox-docker-react yarn test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "eu-central-1"
+  app: "sandbox-docker-react"
+  env: "development"
+  bucket_name: "elasticbeanstalk-eu-central-1-598824494253"
+  bucket_path: "sandbox-docker-react"
+  on:
+    branch: master
+    access_key_id: "$"AWS_ACCESS_KEY"
+    secret_access_key: "$AWS_SECRET_KEY"
